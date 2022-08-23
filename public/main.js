@@ -1,4 +1,5 @@
-const { app, BrowserWindow } = require('electron')
+const { app, BrowserWindow, ipcMain  } = require('electron')
+const exec = require('child_process').exec;
 
 app.whenReady().then(() => {
    const win = new BrowserWindow(
@@ -6,13 +7,17 @@ app.whenReady().then(() => {
          width: 600,
          height: 400,
          webPreferences: {
-            nodeIntegration: true
-          }
+            nodeIntegration: true,
+            contextIsolation: false
+         }
       }
    );
 
    win.loadURL('http://localhost:3000').then().catch((error) => {
       console.error(error)
    })
-   win.webContents.openDevTools()
+
+   ipcMain.on('commandExec', (event, data) => {
+      exec('start cmd /k \"'+ data)
+   })
 });
