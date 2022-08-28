@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { CommandsType } from '../../types/commands';
+import Button from '@mui/material/Button';
 
 export default function Config() {
   const [commands, setcommands] = useState<string | null | CommandsType>(
@@ -27,7 +28,12 @@ export default function Config() {
     }
 
     setcommands(change);
+  }
+
+  function saveConfig(){
     localStorage.setItem('commands', JSON.stringify(commands));
+    // eslint-disable-next-line no-restricted-globals
+    location.reload();
   }
 
   if (!commands || !Array.isArray(commands)) return null;
@@ -51,6 +57,7 @@ export default function Config() {
           );
         })}
       </ul>
+      <Button onClick={saveConfig} variant="contained">Save</Button>
     </div>
   );
 }
