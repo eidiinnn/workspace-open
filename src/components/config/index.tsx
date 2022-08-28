@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { CommandsType } from '../../types/commands';
 import Button from '@mui/material/Button';
+import { BiX } from "react-icons/bi";
 
 export default function Config() {
   const [commands, setcommands] = useState<string | null | CommandsType>(
@@ -26,8 +27,19 @@ export default function Config() {
       default:
         break;
     }
-
     setcommands(change);
+  }
+
+  function addNewCommand(){
+    const commandsChange = Array.isArray(commands) ? [...commands] : [];
+    commandsChange.push({name: '', command: ''})
+    setcommands(commandsChange);
+  }
+
+  function removeCommand(index: number){
+    const commandsChange = Array.isArray(commands) ? [...commands] : [];
+    commandsChange.splice(index, 1);
+    setcommands(commandsChange);
   }
 
   function saveConfig(){
@@ -42,7 +54,7 @@ export default function Config() {
       <ul style={style.ulStyle}>
         {commands.map((item, index) => {
           return (
-            <li style={style.liStyle}>
+            <li style={style.liStyle} key={index}>
               <input
                 type='text'
                 value={item.name}
@@ -53,9 +65,11 @@ export default function Config() {
                 value={item.command}
                 onChange={(event) => updateState(index, event.target.value, 'command')}
               />
+              <BiX onClick={() => removeCommand(index)} style={{color: 'white'}}/>
             </li>
           );
         })}
+        <Button onClick={addNewCommand} variant="contained">New command</Button>
       </ul>
       <Button onClick={saveConfig} variant="contained">Save</Button>
     </div>
